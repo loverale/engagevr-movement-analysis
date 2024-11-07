@@ -1,4 +1,8 @@
 from paths import gaze_output_path
+import pandas as pd
+import numpy as np
+import os
+import csv
 
 # global vars
 gaze_towards_instructor = 0
@@ -233,7 +237,6 @@ def stuins_gaze_process_all_files(folder_path):
                 print(f"    processing {sub_file}")
 
                 file_path = os.path.join(folder_path, sub_file)
-                row_count += row_counter(file_path)
                 result_df = stuins_gaze_distance_process_file(file_path, pPROF)
                 gaze_towards_instructor = 0 # re-initialize
                 all_results = pd.concat([all_results, result_df], ignore_index=True)

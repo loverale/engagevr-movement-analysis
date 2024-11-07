@@ -122,7 +122,8 @@ def stuins_gaze_process_all_files(folder_path):
     all_results = pd.DataFrame()  # master file master file
     row_count = 0
 
-    # also bad coding practice, but the more efficient p1 = p3 = ... is breaking the sript
+    # also bad coding practice, but the more efficient p1 = p3 = ... is breaking the script
+    # this is our numbering for the participants to include in the analysis
     #region
     p1 = []
     p3 = []
@@ -161,6 +162,7 @@ def stuins_gaze_process_all_files(folder_path):
     for file_name in os.listdir(folder_path):
 
         #more bad coding practice (see above)
+        # this creates a series of sublists of each participant, basically takes the folder of everything and subdivides
         #region
         # _ added to p1 and p3 to avoid adding files from p10, p30, etc
         if("p1_" in file_name):

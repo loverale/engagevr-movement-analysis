@@ -4,29 +4,24 @@ import os
 import csv
 import warnings
 
-# including created packages
-import anonymizer # gitignored due to personal identifiable information
+# including created packages -- these are to take the raw .myrec file, created a usable format, anonymize and cut down on subfolders, and rename variables
 import raw_file_processor
+import anonymizer # gitignored due to personal identifiable information
+import variable_name_converter # gitignored, as it converts these variables to our specific naming convention for analysis, which isn't important
+
+# created packages for variable calculations
 import stu_ins_calculator
 import stu_stu_calculator
 import delta_calculator
 
-# gitignored, these are just your absolute paths, 
-from paths import raw_folder_path, processed_folder_path 
+from paths import raw_folder_path, processed_folder_path # gitignored, these are just your absolute paths
 # e.g., "~/Desktop/name/folder1/folder2"
 
-gaze_towards_instructor = 0
-gaze_towards_other = 0
-no_match = []
-stop_running = False
-
-# not really needed for final computations. was just for descriptive
-def row_counter(file_path):
-    with open(file_path, 'r', newline='') as file:
-        reader = csv.reader(file, delimiter='\t')
-        row_count = sum(1 for row in reader)  # Count the number of rows
-    return row_count
-
+# next steps todo://
+# 1. refactor variable calculators to look at notable columns in new names (after variable name converter)
+# 2. implement raw_file_processor
+# 3. refactor anonymizer
+# 4. general refactor of dfs in subfiles
 ######
 
 # never replicate this line of code

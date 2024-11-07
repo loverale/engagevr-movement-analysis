@@ -1,3 +1,5 @@
+from paths import delta_output_path
+
 # this script will calculate delta between frames
 def calculate_deltas_in_intervals(df, cols):
     # initialization to ensure empty df per file
@@ -88,7 +90,9 @@ def delta_all_files_in_folder(folder_path):
             all_results = pd.concat([all_results, result_df], ignore_index=True) # adds to master file
 
     # master file master file
-    output_file = os.path.join(folder_path, 'all_participants_delta.csv')
-    all_results.to_csv(output_file, index=False)
-    print(f"All processed data saved to {output_file}")
+    output_path = os.path.join(delta_output_path, 'all_participants_delta.csv')
+    all_results.to_csv(output_path, index=False)
+    print(f"All processed data saved to {output_path}")
     print(f"Row count: {row_count}")
+
+

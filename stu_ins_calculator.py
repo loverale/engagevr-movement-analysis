@@ -1,3 +1,5 @@
+from paths import gaze_output_path
+
 # global vars
 gaze_towards_instructor = 0
 
@@ -237,7 +239,7 @@ def stuins_gaze_process_all_files(folder_path):
                 all_results = pd.concat([all_results, result_df], ignore_index=True)
 
     # master file
-    output_file = os.path.join(folder_path, 'all_participants_gaze.csv')
+    output_file = os.path.join(gaze_output_path, 'all_participants_gaze.csv')
     all_results.to_csv(output_file, index=False)
     print(f"    All processed data saved to {output_file}")
     print(f"    Row count: {row_count}")

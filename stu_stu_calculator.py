@@ -1,3 +1,5 @@
+from paths import gaze_output_path
+
 # global vars
 gaze_towards_other = 0
 no_match = []
@@ -100,7 +102,7 @@ def stustu_gaze_process_all_files(folder_path):
         all_results = pd.concat([all_results, result_df], ignore_index=True)
 
     # master file
-    output_file = '~/Desktop/stustugaze.csv' # lazy of me
+    output_path = os.path.join(gaze_output_path, 'all_participants_delta.csv')
     all_results.to_csv(output_file, index=False)
     print(f"    All processed data saved to {output_file}")
     print(f"    Row count: {row_count}")

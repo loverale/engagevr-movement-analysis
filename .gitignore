@@ -2,3 +2,6 @@ raw_files/
 processed_files/
 analysis_output/
 variable_name_converter.py
+paths.py
+anonymizer.py
+__pycache__/

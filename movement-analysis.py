@@ -1,7 +1,3 @@
-import pandas as pd
-import numpy as np
-import os
-import csv
 import warnings
 
 # including created packages -- these are to take the raw .myrec file, created a usable format, anonymize and cut down on subfolders, and rename variables
@@ -22,6 +18,7 @@ from paths import raw_folder_path, processed_folder_path # gitignored, these are
 # 2. implement raw_file_processor
 # 3. refactor anonymizer
 # 4. general refactor of dfs in subfiles
+
 ######
 
 # never replicate this line of code

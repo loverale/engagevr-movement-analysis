@@ -7,3 +7,4 @@ anonymizer.py
 __pycache__/
 unzip_tests/
 .DS_Store
+anonymizer3.py

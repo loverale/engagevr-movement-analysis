@@ -5,7 +5,9 @@ import os
 import csv
 
 # global vars
-gaze_towards_instructor = 0
+direct_gaze_towards_instructor = 0
+peripheral_gaze_towards_instructor = 0
+opposite_gaze_towards_instructor = 0
 
 # fairly easy but probably not optimal
 def calculate_distance(student_pos_x, student_pos_y, student_pos_z, prof_pos_x, prof_pos_y, prof_pos_z):
@@ -47,20 +49,25 @@ def calculate_gaze_towards_other(student_pos, student_rotation, other_pos, thres
     # Calculate the dot product between the gaze direction and the direction to B
     dot_product = np.dot(student_gaze_direction, direction_to_other)
 
-    # Check if the dot product is above the threshold
+    global direct_gaze_towards_instructor, peripheral_gaze_towards_instructor, opposite_gaze_towards_instructor
+
+    # Check if the dot product is above the threshold to assume direct gaze
     # threshhold is fairly arbitrary here, but general idea is there. probably will reduce to 70-80 if i can find some FoV lit
     if(dot_product > threshold):
-        returnvalue = 1
-    else:
-        returnvalue = 0
+        direct_gaze_towards_instructor += 1
+    # assume 0-.749 is peripheral gaze
+    elif dot_product > 0 and dot_product < threshold:
+        peripheral_gaze_towards_instructor += 1
+    # either not in frame (or just generally in wrong hemisphere)
+    elif dot_product <= 0:
+        opposite_gaze_towards_instructor += 1
 
-    # general use would be to divide by 30 (30fps) to get a general seconds-looked-at-prof
-    return returnvalue
+
 
 # this function takes the given student file, finds the appropriate instructor profile (pPROF), and sends to gaze function
 def stuins_gaze_distance_process_file(file_path, pPROF):
     # bringing global variable, c# habits die hard
-    global gaze_towards_instructor
+    global direct_gaze_towards_instructor, peripheral_gaze_towards_instructor, opposite_gaze_towards_instructor
 
     # temp variables parsing file name
     participant_id = os.path.basename(file_path).split('.')[
@@ -93,7 +100,7 @@ def stuins_gaze_distance_process_file(file_path, pPROF):
             corresponding_row = prof_data.loc[row_number]
             ins_pos = corresponding_row['HeadPosition_x'], corresponding_row['HeadPosition_y'], corresponding_row[
                 'HeadPosition_z']
-            gaze_towards_instructor += calculate_gaze_towards_other(stu_pos, stu_rot, ins_pos)
+            # direct_gaze_towards_instructor += calculate_gaze_towards_other(stu_pos, stu_rot, ins_pos) # moved to elsewhe
             distance_df.append(calculate_distance(row['HeadPosition_x'], row['HeadPosition_y'], row['HeadPosition_z'], corresponding_row['HeadPosition_x'], corresponding_row['HeadPosition_y'], corresponding_row[
                 'HeadPosition_z']))
         else:
@@ -102,13 +109,19 @@ def stuins_gaze_distance_process_file(file_path, pPROF):
     #length = len(file_path)
     student_total_time = (stu_data['full_frame_no'].iloc[-1] - stu_data['full_frame_no'].iloc[0]) / 30
     student_total_time = round(student_total_time, 2) # rounding to 2 for easy viewing
-    gaze_towards_instructor = gaze_towards_instructor / 30
-    gaze_towards_instructor = round(gaze_towards_instructor, 2)
+    direct_gaze_towards_instructor = direct_gaze_towards_instructor / 30
+    direct_gaze_towards_instructor = round(direct_gaze_towards_instructor, 2)
+    peripheral_gaze_towards_instructor = peripheral_gaze_towards_instructor / 30
+    peripheral_gaze_towards_instructor = round(peripheral_gaze_towards_instructor, 2)
+    opposite_gaze_towards_instructor = opposite_gaze_towards_instructor / 30
+    opposite_gaze_towards_instructor = round(opposite_gaze_towards_instructor, 2)
 
     # prepare the output
     result_df = pd.DataFrame({
         'participant_id': [participant_id],
-        'gazeins': [gaze_towards_instructor],
+        'dirgazeins': [direct_gaze_towards_instructor],
+        'pergazeins': [peripheral_gaze_towards_instructor],
+        'oppgazeins': [opposite_gaze_towards_instructor],
         'total_time': [student_total_time],
         'stuinsdis': [np.mean(distance_df)]
     })
@@ -231,7 +244,7 @@ def stuins_gaze_process_all_files(folder_path):
     all_files = [p1, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p14, p15, p16, p17, p18, p19, p20, p21, p22, p24, p25, p26, p27, p28, p29, p30, p31, p34, p35]
 
     row_count = 0
-    global gaze_towards_instructor
+    global direct_gaze_towards_instructor, peripheral_gaze_towards_instructor, opposite_gaze_towards_instructor
 
     for file_name in all_files:
         for sub_file in file_name:
@@ -240,7 +253,9 @@ def stuins_gaze_process_all_files(folder_path):
 
                 file_path = os.path.join(folder_path, sub_file)
                 result_df = stuins_gaze_distance_process_file(file_path, pPROF)
-                gaze_towards_instructor = 0 # re-initialize
+                direct_gaze_towards_instructor = 0 # re-initialize
+                peripheral_gaze_towards_instructor = 0 # re-initialie
+                opposite_gaze_towards_instructor = 0
                 all_results = pd.concat([all_results, result_df], ignore_index=True)
 
     # master file

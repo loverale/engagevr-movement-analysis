@@ -2,7 +2,7 @@ import warnings
 
 # including created packages -- these are to take the raw .myrec file, created a usable format, anonymize and cut down on subfolders, and rename variables
 import raw_file_processor
-import anonymizer # gitignored due to personal identifiable information
+import anonymizer3 # gitignored due to personal identifiable information
 import variable_name_converter # gitignored, as it converts these variables to our specific naming convention for analysis, which isn't important
 
 # created packages for variable calculations

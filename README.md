@@ -2,6 +2,12 @@
 
 This set of scripts are used to take a recording within EngageVR, and analyze across a number of different measures.
 
+### Immediate TODO://
+1. Implement raw_file_processor (takes in .myrec and converts it to a better format)
+2. Implement stu-stu direct/peripheral gaze, both individually and aggergately
+3. Implement disengage/disconnect (no hand movements, threshold to determine if headset is on forehead)
+4. Consolidate the interation of the directory into one file
+
 ### General Pipeline
 1. ```raw_file_processor.py``` takes the .myrec file from EngageVR, and creates a tidy format for each person within the recording.
 2. ```anonymizer.py``` isn't included in this doc, but takes the names from the files and assigns a participant number. A template will be included soon, but for the time being isn't included for security

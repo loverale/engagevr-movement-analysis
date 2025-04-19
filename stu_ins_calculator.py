@@ -58,11 +58,6 @@ def calculate_gaze_towards_other(student_pos, student_rotation, other_pos, thres
     # assume 0-.749 is peripheral gaze
     elif dot_product > 0 and dot_product < threshold:
         peripheral_gaze_towards_instructor += 1
-    # either not in frame (or just generally in wrong hemisphere)
-    elif dot_product <= 0:
-        opposite_gaze_towards_instructor += 1
-
-
 
 # this function takes the given student file, finds the appropriate instructor profile (pPROF), and sends to gaze function
 def stuins_gaze_distance_process_file(file_path, pPROF):
@@ -100,7 +95,7 @@ def stuins_gaze_distance_process_file(file_path, pPROF):
             corresponding_row = prof_data.loc[row_number]
             ins_pos = corresponding_row['HeadPosition_x'], corresponding_row['HeadPosition_y'], corresponding_row[
                 'HeadPosition_z']
-            # direct_gaze_towards_instructor += calculate_gaze_towards_other(stu_pos, stu_rot, ins_pos) # moved to elsewhe
+            direct_gaze_towards_instructor += calculate_gaze_towards_other(stu_pos, stu_rot, ins_pos) # moved to elsewhe
             distance_df.append(calculate_distance(row['HeadPosition_x'], row['HeadPosition_y'], row['HeadPosition_z'], corresponding_row['HeadPosition_x'], corresponding_row['HeadPosition_y'], corresponding_row[
                 'HeadPosition_z']))
         else:
